@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Provider-neutral entry point: configuration comes from the caller's environment.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+export HEALTH_CLOUD=1 HEALTH_AI_EMBED=0 HEALTH_USER_ID=demo-alex
+uv sync --python 3.12 --locked
+exec uv run python scripts/sa_demo.py "$@"

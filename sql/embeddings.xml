@@ -1,0 +1,9 @@
+<clickhouse>
+ <named_collections>
+  <health_local_embeddings>
+   <provider>openai</provider>
+   <endpoint>http://host.docker.internal:8088/api/embeddings</endpoint>
+   <api_key>local-demo</api_key>
+  </health_local_embeddings>
+ </named_collections>
+</clickhouse>

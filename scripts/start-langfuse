@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+: "${LANGFUSE_PUBLIC_KEY:?Resolve your Langfuse public key at launch}"
+: "${LANGFUSE_SECRET_KEY:?Resolve your Langfuse secret key at launch}"
+: "${LANGFUSE_BASE_URL:?Set your Langfuse instance URL}"
+exec ./scripts/start-team --live "$@"

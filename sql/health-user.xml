@@ -1,0 +1,8 @@
+<clickhouse><users><health_demo>
+ <access_management remove="remove"/>
+ <grants>
+  <query>GRANT ALL ON health_demo.*</query>
+  <query>GRANT SELECT ON system.*</query>
+  <query>GRANT NAMED COLLECTION ON health_local_embeddings</query>
+ </grants>
+</health_demo></users></clickhouse>

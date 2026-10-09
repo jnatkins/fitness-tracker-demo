@@ -1,0 +1,23 @@
+[project]
+name = "health-agent-demo"
+version = "0.1.0"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.35,<1",
+    "psycopg[binary]>=3.2,<4",
+    "clickhouse-connect>=0.8,<1",
+    "fastembed>=0.7,<1",
+    "httpx>=0.28,<1",
+    "mcp>=1.13,<2",
+    "langfuse==4.17.0",
+]
+[dependency-groups]
+dev = ["pytest>=8,<9"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[tool.hatch.build.targets.wheel]
+packages = ["src/health_demo"]
+[project.scripts]
+health-demo = "health_demo.cli:main"

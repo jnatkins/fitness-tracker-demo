@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+# The fallback must target Docker even from a cloud-configured shell.
+unset HEALTH_USER_ID HEALTH_ACTIVITY_SHIFT_DAYS HEALTH_CLOUD DATABASE_URL CLICKHOUSE_HOST CLICKHOUSE_PORT CLICKHOUSE_USER CLICKHOUSE_PASSWORD CLICKHOUSE_SECURE HEALTH_AI_EMBED
+if docker info >/dev/null 2>&1; then
+  docker compose up -d --wait
+elif docker --context orbstack info >/dev/null 2>&1; then
+  docker --context orbstack compose up -d --wait
+else
+  echo 'Start Docker Desktop or OrbStack, then run scripts/start-local again.' >&2
+  exit 1
+fi
+uv sync --python 3.12
+uv run health-demo seed
+if [[ "${HEALTH_IMPORT_USDA:-0}" == 1 ]]; then
+  uv run python -m health_demo.usda
+  HEALTH_BULK_EMBED=1 uv run python -c 'from health_demo.cdc import sync; [None for _ in iter(lambda: sync(), 0)]'
+fi
+exec uv run health-demo serve

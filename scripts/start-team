@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Portable handoff: local databases, sample profile, optional user-owned providers.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+live=0
+export HEALTH_IMPORT_USDA=0
+for arg in "$@"; do
+  case "$arg" in
+    --live) live=1 ;;
+    --catalog) export HEALTH_IMPORT_USDA=1 ;;
+    *) echo 'Usage: scripts/start-team [--catalog] [--live]' >&2; exit 2 ;;
+  esac
+done
+if [[ "$live" == 1 ]]; then
+  : "${AGENT_BASE_URL:?Set your model provider base URL}"
+  : "${AGENT_MODEL:?Set your model name}"
+  : "${AGENT_API_KEY:?Resolve your own model key at launch}"
+  if [[ -n "${LANGFUSE_BASE_URL:-}${LANGFUSE_PUBLIC_KEY:-}${LANGFUSE_SECRET_KEY:-}" ]]; then
+    : "${LANGFUSE_BASE_URL:?Set your Langfuse instance URL}"
+    : "${LANGFUSE_PUBLIC_KEY:?Resolve your Langfuse public key at launch}"
+    : "${LANGFUSE_SECRET_KEY:?Resolve your Langfuse secret key at launch}"
+  fi
+else
+  unset AGENT_BASE_URL AGENT_MODEL AGENT_API_KEY AGENT_API_STYLE
+  unset AGENT_REASONING_EFFORT WEAVE_PROJECT WANDB_API_KEY
+  unset LANGFUSE_PUBLIC_KEY LANGFUSE_SECRET_KEY LANGFUSE_BASE_URL
+fi
+exec ./scripts/start-local
